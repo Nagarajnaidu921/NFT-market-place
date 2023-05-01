@@ -4,6 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 type Data = {
   name: string
 }
+console.log(process.env.IPFS_API_KEY)
 
 export default function handler(
   req: NextApiRequest,
