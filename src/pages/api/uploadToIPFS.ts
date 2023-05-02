@@ -1,8 +1,9 @@
 import { create } from 'ipfs-http-client';
-console.log(process.env.IPFS_API_KEY)
+
 const auth =
-    'Basic ' + Buffer.from(`${process.env.IPFS_API_KEY}:${process.env.IPFS_API_SECRET}`).toString('base64');
-console.log(auth)
+    'Basic ' + Buffer.from(`${process.env.IPFS_API_KEY}:${process.env.IPFS_API_SECRET}`).toString('base64');4
+
+// Create ipfs http client
 const client = create({
     host: 'ipfs.infura.io',
     port: 5001,
@@ -13,19 +14,18 @@ const client = create({
 });
 
 
-export const uploadData = async () => {
-    console.log(process.env.IPFS_API_KEY)
-
-
+// upload file image
+export const uploadImage = async (file: File) => {
     try {
-        const res = await client.add("Test");
-        console.log(res.cid.toString())
+        const res = await client.add(file);
         return res;
     } catch (error) {
         console.log(error)
     }
 }
 
+
+// upload json to ipfs
 export const uploadJson = async (data: any) => {
     try {
         const res = await client.add(JSON.stringify(data));

@@ -51,7 +51,7 @@ const FileInput = (props: UseControllerProps<any>) => {
     </div>
 }
 
-export const AssetTokenisingForm = () => {
+export const AssetTokenisingForm = ({onSubmit}: any) => {
 
     const { register, control, handleSubmit, reset, watch, formState: { errors } } = useForm({
         defaultValues: {
@@ -71,7 +71,7 @@ export const AssetTokenisingForm = () => {
     });
 
     return <>
-        <form onSubmit={handleSubmit((data) => { console.log(data) })} className="flex flex-wrap flex-col md:flex-row">
+        <form onSubmit={handleSubmit((data) => { onSubmit(data) })} className="flex flex-wrap flex-col md:flex-row">
             {/* File Input */}
             <div className="w-100 md:w-1/3 flex items-center justify-center mt-3">
                 <FileInput control={control} name="image" rules={{ required: true }} />
