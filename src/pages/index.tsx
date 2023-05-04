@@ -1,16 +1,16 @@
 import { Inter } from 'next/font/google'
-import { uploadImage, uploadJson } from './api/uploadToIPFS'
 import { AssetTokenisingForm } from '@app/components/AssetTokenisingForm'
+import { useIPFS } from '@app/hooks/useIPFS'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
 
+  const { isError, isInProgress, uploadData, ipfsUrl } = useIPFS()
+
   const handleSubmit = async (data: any) => {
     try {
-      const imageUploadRes = await uploadImage(data.image);
-      const metadata = {...data, image: `${process.env.IPFS_GATEWAY}/${imageUploadRes?.cid.toJSON()['/']}`}
-      const metaDataRes = await uploadJson(metadata);
+      await uploadData(data)
       // TODO: Mint token with `${process.env.IPFS_GATEWAY}/${metaDataRes?.cid.toJSON()['/']}`
     } catch (error) {
       console.log(error)
@@ -18,6 +18,8 @@ export default function Home() {
   }
 
   return (
-    <AssetTokenisingForm onSubmit={handleSubmit}></AssetTokenisingForm>
+    <>
+      <AssetTokenisingForm onSubmit={handleSubmit} submitOnProgress={isInProgress}></AssetTokenisingForm>
+    </>
   )
 }

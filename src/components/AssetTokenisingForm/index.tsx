@@ -8,6 +8,11 @@ import styles from './form.module.css';
  * @returns 
  * TODO: May beneed support for edit in future
  */
+
+type FormProps = {
+    onSubmit: (data: any) => Promise<void>;
+    submitOnProgress: boolean;
+}
 const FileInput = (props: UseControllerProps<any>) => {
 
     const [image, setImage] = useState<string | undefined>();
@@ -52,15 +57,14 @@ const FileInput = (props: UseControllerProps<any>) => {
     </div>
 }
 
-export const AssetTokenisingForm = ({ onSubmit }: any) => {
+export const AssetTokenisingForm = ({ onSubmit, submitOnProgress }: FormProps) => {
 
     const { register, control, handleSubmit, reset, watch, formState: { errors } } = useForm({
         defaultValues: {
             attributes: [{ key: "", value: "" }],
-            title: "Test",
+            name: "",
             location: "",
             type: "tree",
-            age: 0,
             description: "",
         }
     });
@@ -106,7 +110,7 @@ export const AssetTokenisingForm = ({ onSubmit }: any) => {
                             <label className="label">
                                 <span className="label-text">Name</span>
                             </label>
-                            <input type="text" className={`input w-full input-bordered w-100 ${errors.title ? 'input-error' : ''}`} {...register(`title`, { required: true })} />
+                            <input type="text" className={`input w-full input-bordered w-100 ${errors.name ? 'input-error' : ''}`} {...register(`name`, { required: true })} />
                         </div>
                     </div>
 
@@ -116,20 +120,10 @@ export const AssetTokenisingForm = ({ onSubmit }: any) => {
                             <label className="label">
                                 <span className="label-text">Description</span>
                             </label>
-                            <textarea className="textarea textarea-bordered h-24 w-full" placeholder="Description" {...register(`title`)}></textarea>
+                            <textarea className="textarea textarea-bordered h-24 w-full" placeholder="Description" {...register(`description`)}></textarea>
                         </div>
                     </div>
 
-                    {/* Age */}
-
-                    <div className="flex w-full justify-center">
-                        <div className="w-100 w-full p-1">
-                            <label className="label">
-                                <span className="label-text">Age</span>
-                            </label>
-                            <input type="number" className={`input w-full input-bordered w-100 ${errors.age ? 'input-error' : ''}`} {...register(`location`, { required: true })} />
-                        </div>
-                    </div>
 
                     {/* Location */}
                     <div className="flex w-full justify-center">
@@ -178,7 +172,7 @@ export const AssetTokenisingForm = ({ onSubmit }: any) => {
 
                 {/* Submit */}
                 <div className="flex justify-center w-full mt-5">
-                    <button className="btn btn-primary w-1/2">Submit</button>
+                    <button className={`btn btn-primary w-1/2 ${submitOnProgress ? "loading" : ""}`}>Submit</button>
                 </div>
             </div>
         </form>

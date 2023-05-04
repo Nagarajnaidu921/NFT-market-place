@@ -5,7 +5,8 @@ const nextConfig = {
   env: {
     IPFS_API_KEY: process.env.IPFS_API_KEY,
     IPFS_API_SECRET: process.env.IPFS_API_SECRET,
-    IPFS_GATEWAY: process.IPFS_GATEWAY
+    IPFS_GATEWAY: process.env.IPFS_GATEWAY,
+    
   }
 }
 
