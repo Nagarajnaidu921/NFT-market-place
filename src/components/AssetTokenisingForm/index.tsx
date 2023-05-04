@@ -6,6 +6,7 @@ import styles from './form.module.css';
  * FileInput - Component to selet the NFT image to tokanise
  * @param props 
  * @returns 
+ * TODO: May beneed support for edit in future
  */
 const FileInput = (props: UseControllerProps<any>) => {
 
@@ -51,12 +52,15 @@ const FileInput = (props: UseControllerProps<any>) => {
     </div>
 }
 
-export const AssetTokenisingForm = ({onSubmit}: any) => {
+export const AssetTokenisingForm = ({ onSubmit }: any) => {
 
     const { register, control, handleSubmit, reset, watch, formState: { errors } } = useForm({
         defaultValues: {
             attributes: [{ key: "", value: "" }],
-            title: "",
+            title: "Test",
+            location: "",
+            type: "tree",
+            age: 0,
             description: "",
         }
     });
@@ -71,71 +75,111 @@ export const AssetTokenisingForm = ({onSubmit}: any) => {
     });
 
     return <>
-        <form onSubmit={handleSubmit((data) => { onSubmit(data) })} className="flex flex-wrap flex-col md:flex-row">
-            {/* File Input */}
-            <div className="w-100 md:w-1/3 flex items-center justify-center mt-3">
-                <FileInput control={control} name="image" rules={{ required: true }} />
+        <form onSubmit={handleSubmit((data) => { onSubmit(data) })} className="flex flex-wrap flex-col ">
+
+
+            <div className="flex flex-col md:flex-row justify-end" >
+                <div className="form-control sm:w-full md:w-2/3">
+                    <label className="label">
+                        <span className="label-text">Token type</span>
+                    </label>
+                    <select className="select select-bordered" {...register(`type`, { required: true })}>
+                        <option value={"tree"}>Tree</option>
+                        <option value={"car"}>Car</option>
+                        <option value={"Book"}>Book</option>
+                    </select>
+                </div>
             </div>
 
-            <div className="w-100 md:w-2/3 flex flex-col justify-center items-end">
-
-                {/* Title */}
-                <div className="flex w-full justify-center">
-                    <div className="w-100 w-full p-1">
-                        <label className="label">
-                            <span className="label-text">Title</span>
-                        </label>
-                        <input type="text" className={`input w-full input-bordered w-100 ${errors.title ? 'input-error' : ''}`} {...register(`title`, { required: true })} />
-                    </div>
+            <div className="flex flex-wrap flex-col md:flex-row">
+                {/* File Input */}
+                <div className="w-100 md:w-1/3 flex items-center justify-center mt-3">
+                    <FileInput control={control} name="image" rules={{ required: true }} />
                 </div>
 
-                {/* Description */}
-                <div className="flex w-full justify-center">
-                    <div className="w-100 w-full p-1">
-                        <label className="label">
-                            <span className="label-text">Description</span>
-                        </label>
-                        <textarea className="textarea textarea-bordered h-24 w-full" placeholder="Description" {...register(`title`)}></textarea>
+
+                <div className="w-100 md:w-2/3 flex flex-col justify-center items-end">
+
+                    {/* Title */}
+                    <div className="flex w-full justify-center">
+                        <div className="w-100 w-full p-1">
+                            <label className="label">
+                                <span className="label-text">Name</span>
+                            </label>
+                            <input type="text" className={`input w-full input-bordered w-100 ${errors.title ? 'input-error' : ''}`} {...register(`title`, { required: true })} />
+                        </div>
                     </div>
+
+                    {/* Description */}
+                    <div className="flex w-full justify-center">
+                        <div className="w-100 w-full p-1">
+                            <label className="label">
+                                <span className="label-text">Description</span>
+                            </label>
+                            <textarea className="textarea textarea-bordered h-24 w-full" placeholder="Description" {...register(`title`)}></textarea>
+                        </div>
+                    </div>
+
+                    {/* Age */}
+
+                    <div className="flex w-full justify-center">
+                        <div className="w-100 w-full p-1">
+                            <label className="label">
+                                <span className="label-text">Age</span>
+                            </label>
+                            <input type="number" className={`input w-full input-bordered w-100 ${errors.age ? 'input-error' : ''}`} {...register(`location`, { required: true })} />
+                        </div>
+                    </div>
+
+                    {/* Location */}
+                    <div className="flex w-full justify-center">
+                        <div className="w-100 w-full p-1">
+                            <label className="label">
+                                <span className="label-text">Location</span>
+                            </label>
+                            <input type="text" className={`input w-full input-bordered w-100 ${errors.location ? 'input-error' : ''}`} {...register(`location`, { required: true })} />
+                        </div>
+                    </div>
+
+                    {fields.map((item, index) => {
+                        return <div className="flex flex-row justify-center items-end w-full" key={item.id}>
+                            <div className="flex w-full">
+                                {/* Key */}
+                                <div className="w-100 md:w-1/2 p-1">
+                                    <label className="label">
+                                        <span className="label-text">Key</span>
+                                    </label>
+                                    <input type="text" className={`input w-full input-bordered w-100 ${errors.attributes?.at?.(index)?.key ? 'input-error' : ''}`} {...register(`attributes.${index}.key`, { required: true })} />
+                                </div>
+
+                                {/* Value */}
+                                <div className="w-100 md:w-1/2 p-1">
+                                    <label className="label">
+                                        <span className="label-text">Value</span>
+                                    </label>
+                                    <input type="text" className={`input w-full input-bordered w-100 ${errors.attributes?.at?.(index)?.value ? 'input-error' : ''}`}  {...register(`attributes.${index}.value`, { required: true })} />
+                                </div>
+                            </div>
+                            <div className="w-20 p-1">
+                                {fields.length - 1 === index && <button className="btn btn-sm btn-square btn-outline mx-1" onClick={() => {
+                                    append({ key: "", value: "" });
+                                }}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                    </svg>
+                                </button>}
+                                {fields.length > 1 && <button className="btn btn-sm btn-square btn-outline mx-1 btn-error" onClick={() => remove(index)}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                                </button>}
+                            </div>
+                        </div>
+                    })}
                 </div>
-                {fields.map((item, index) => {
-                    return <div className="flex flex-row justify-center items-end w-full" key={item.id}>
-                        <div className="flex w-full">
-                            {/* Key */}
-                            <div className="w-100 md:w-1/2 p-1">
-                                <label className="label">
-                                    <span className="label-text">Key</span>
-                                </label>
-                                <input type="text" className={`input w-full input-bordered w-100 ${errors.attributes?.at?.(index)?.key ? 'input-error' : ''}`} {...register(`attributes.${index}.key`, { required: true })} />
-                            </div>
 
-                            {/* Value */}
-                            <div className="w-100 md:w-1/2 p-1">
-                                <label className="label">
-                                    <span className="label-text">Value</span>
-                                </label>
-                                <input type="text" className={`input w-full input-bordered w-100 ${errors.attributes?.at?.(index)?.value ? 'input-error' : ''}`}  {...register(`attributes.${index}.value`, { required: true })} />
-                            </div>
-                        </div>
-                        <div className="w-20 p-1">
-                            {fields.length - 1 === index && <button className="btn btn-sm btn-square btn-outline mx-1" onClick={() => {
-                                append({ key: "", value: "" });
-                            }}>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                                </svg>
-                            </button>}
-                            {fields.length > 1 && <button className="btn btn-sm btn-square btn-outline mx-1 btn-error" onClick={() => remove(index)}>
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                            </button>}
-                        </div>
-                    </div>
-                })}
-            </div>
-
-            {/* Submit */}
-            <div className="flex justify-center w-full mt-5">
-                <button className="btn btn-primary w-1/2">Submit</button>
+                {/* Submit */}
+                <div className="flex justify-center w-full mt-5">
+                    <button className="btn btn-primary w-1/2">Submit</button>
+                </div>
             </div>
         </form>
     </>
